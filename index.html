@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mis Juegos Web</title>
+</head>
+<body>
+
+  <h1>Mis Juegos Web</h1>
+  <p>Todos los juegos están alojados aquí (self-hosted).</p>
+
+  <hr>
+
+  <h2>Juegos disponibles</h2>
+  <ul id="lista-juegos">
+    <li>Cargando juegos...</li>
+  </ul>
+
+  <hr>
+
+  <p><small>Para añadir un juego nuevo: crea una carpeta dentro de <code>/games/</code> y añádelo en <code>games.json</code>.</small></p>
+
+  <script>
+    fetch('games.json')
+      .then(respuesta => respuesta.json())
+      .then(juegos => {
+        const lista = document.getElementById('lista-juegos');
+        lista.innerHTML = ''; // limpiar "Cargando..."
+
+        if (juegos.length === 0) {
+          lista.innerHTML = '<li>No hay juegos todavía.</li>';
+          return;
+        }
+
+        juegos.forEach(juego => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = 'games/' + juego.folder + '/';
+          a.textContent = juego.name;
+          li.appendChild(a);
+          lista.appendChild(li);
+        });
+      })
+      .catch(error => {
+        document.getElementById('lista-juegos').innerHTML = 
+          '<li>Error al cargar la lista de juegos.</li>';
+        console.error(error);
+      });
+  </script>
+
+</body>
+</html>
